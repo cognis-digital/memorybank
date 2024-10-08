@@ -29,3 +29,4 @@
 2026-05-04T15:51:21  test: strengthen coverage
 2026-05-14T10:08:28  chore: tune defaults
 2024-09-04T11:55:05  perf: micro-optimization
+2024-10-08T18:12:12  style: formatting (we chose violence on tabs vs spaces)
