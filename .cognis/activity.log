@@ -45,3 +45,4 @@
 2024-09-19T17:37:47  build(scan): add a JSON schema for output
 2024-10-24T12:54:54  chore(rules): fix off-by-one in line numbers
 2024-11-10T19:11:01  perf(tests): support stdin as a source
+2024-11-26T14:28:08  chore: IRONCLAD hardening pass
