@@ -48,3 +48,4 @@
 2024-11-26T14:28:08  chore: IRONCLAD hardening pass
 2024-12-13T09:45:15  ci(format): wire the MCP tool schema
 2024-12-30T16:02:22  fix(parser): handle empty and malformed input
+2025-01-15T11:19:29  refactor(deps): cover the multiline case
