@@ -54,3 +54,4 @@
 2025-03-07T08:10:50  feat(io): add color + severity icons
 2025-03-23T15:27:57  refactor(docs): trim whitespace in parsed fields
 2025-04-09T10:44:04  docs: expand examples
+2025-05-14T17:01:11  feat(output): memoize repeated lookups
