@@ -56,3 +56,4 @@
 2025-04-09T10:44:04  docs: expand examples
 2025-05-14T17:01:11  feat(output): memoize repeated lookups
 2025-05-30T12:18:18  feat(output): add pagination to large reports
+2025-06-16T19:35:25  docs(scan): add a fast path for the common case
