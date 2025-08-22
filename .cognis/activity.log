@@ -60,3 +60,4 @@
 2025-07-03T14:52:32  perf: micro-optimization
 2025-07-19T09:09:39  build(tests): add a --format json alias
 2025-08-05T16:26:46  build(config): lower memory on big inputs
+2025-08-22T11:43:53  chore(format): load rules lazily for faster startup
