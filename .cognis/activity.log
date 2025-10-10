@@ -63,3 +63,4 @@
 2025-08-22T11:43:53  chore(format): load rules lazily for faster startup
 2025-09-08T18:00:00  test: add edge case
 2025-09-24T13:17:07  ci(ci): respect .gitignore when walking
+2025-10-10T08:34:14  chore(cache): add a dry-run flag
