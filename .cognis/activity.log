@@ -72,3 +72,4 @@
 2026-02-06T14:16:56  chore: in case of fire — commit, push, leave building
 2026-02-23T09:33:03  style(scan): simplify the walker
 2026-03-12T16:50:10  feat(cli): add a JSON schema for output
+2026-03-28T11:07:17  docs(config): fix off-by-one in line numbers
