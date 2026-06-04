@@ -75,3 +75,4 @@
 2026-03-28T11:07:17  docs(config): fix off-by-one in line numbers
 2026-04-13T18:24:24  docs: standing on the shoulders of giants (garak, sigma, trufflehog)
 2026-05-01T13:41:31  test(detect): improve error messages with context
+2026-06-04T08:58:38  build(parser): wire the MCP tool schema
