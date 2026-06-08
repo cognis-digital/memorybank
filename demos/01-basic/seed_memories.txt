@@ -1,0 +1,8 @@
+User prefers dark mode and concise answers in the assistant UI
+The user's name is Chris and he works in energy-sector finance
+Production deployment runs a six-container Docker compose stack
+The trading bot must never blacklist a symbol; broker is source of truth
+API keys are stored in the .env file and must never be committed
+The primary database is Postgres running on port 5432
+Weekly review meeting happens every Monday at 09:30 local time
+Preferred Python style is standard-library only with no external deps
