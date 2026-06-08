@@ -1,22 +1,11 @@
-"""MEMORYBANK — portable long-term memory store for AI agents.
-
-A zero-dependency, stdlib-only engine for storing, retrieving, and ranking
-agent memories with recency + relevance + importance scoring. Designed to be
-exposed over MCP or driven from the CLI.
-"""
-from .core import (
-    MemoryBank,
-    Memory,
-    MemoryBankError,
-)
-
-TOOL_NAME = "memorybank"
-TOOL_VERSION = "1.0.0"
-
-__all__ = [
-    "MemoryBank",
-    "Memory",
-    "MemoryBankError",
-    "TOOL_NAME",
-    "TOOL_VERSION",
-]
+"""memorybank — part of the Cognis Neural Suite."""
+try:  # re-export the tool's public API + identity from core
+    from memorybank.core import *  # noqa: F401,F403
+except Exception:  # pragma: no cover
+    pass
+try:
+    from memorybank.core import TOOL_NAME, TOOL_VERSION
+except Exception:  # pragma: no cover
+    TOOL_NAME = "memorybank"
+    TOOL_VERSION = "0.1.0"
+__version__ = TOOL_VERSION
