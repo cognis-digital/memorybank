@@ -36,6 +36,7 @@ RULES = [
     ("MEM-001", "high", "TODO", "Unresolved TODO / placeholder left in input", "Resolve before shipping."),
     ("MEM-002", "medium", "FIXME", "FIXME marker found", "Address the flagged issue."),
     ("MEM-003", "low", "XXX", "XXX marker found", "Review the flagged section."),
+    ("MEM-102", "high", 'NOTE: secret', 'Inline note referencing a secret', 'Move secrets to a vault / env var.'),
 ]
 
 def scan(target: str, **opts) -> ScanResult:
