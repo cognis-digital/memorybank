@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: memorybank, labels: { app: memorybank } }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: memorybank } }
+  template:
+    metadata: { labels: { app: memorybank } }
+    spec:
+      containers:
+        - name: memorybank
+          image: ghcr.io/cognis-digital/memorybank:latest
+          ports: [{ containerPort: 8000 }]
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: memorybank }
+spec:
+  selector: { app: memorybank }
+  ports: [{ port: 80, targetPort: 8000 }]
