@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-memorybank
+pip install "git+https://github.com/cognis-digital/memorybank.git"
 memorybank scan .            # → prioritized findings in seconds
 ```
 
@@ -49,7 +49,7 @@ agent-memory niche
 ## Quick start
 
 ```bash
-pip install cognis-memorybank
+pip install "git+https://github.com/cognis-digital/memorybank.git"
 memorybank --version
 memorybank scan .                       # scan current project
 memorybank scan . --format json         # machine-readable

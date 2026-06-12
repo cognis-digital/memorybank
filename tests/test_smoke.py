@@ -1,5 +1,4 @@
 """Smoke tests for MEMORYBANK — stdlib only, no network."""
-import json
 import os
 import sys
 import tempfile
