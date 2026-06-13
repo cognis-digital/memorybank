@@ -20,6 +20,36 @@ pip install cognis-memorybank
 memorybank scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+1. **Install** (Python 3.8+, stdlib only):
+   ```bash
+   pip install memorybank
+   ```
+   The store is a single JSONL file (default `memorybank.jsonl`, override with `--path` or `MEMORYBANK_PATH`).
+2. **Remember** a fact, optionally tagged and weighted:
+   ```bash
+   memorybank remember "User prefers metric units" --tag prefs --importance 2.0
+   ```
+3. **Recall** the most relevant memories for a query (ranked, recency-aware):
+   ```bash
+   memorybank recall "what units?" --limit 5 --tag prefs
+   ```
+   Add `--no-touch` to retrieve without updating recency.
+4. **Read the output** — every command emits JSON by default; switch to a human table:
+   ```bash
+   memorybank --format table list
+   memorybank stats                 # bank-wide counts/metrics
+   memorybank forget <id>           # delete one memory by id
+   ```
+5. **Drive it from an agent loop / CI** — point each session at its own bank file:
+   ```bash
+   export MEMORYBANK_PATH=./agent_state/memory.jsonl
+   memorybank recall "$TASK" --limit 8 | jq -r '.[].text'
+   ```
+   Exits non-zero on error so callers can detect failures.
+
+
 ## Contents
 
 - [Why memorybank?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
