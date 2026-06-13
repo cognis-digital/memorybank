@@ -49,28 +49,35 @@ def _emit(obj, fmt: str) -> None:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog=TOOL_NAME, description="Portable agent memory store.")
+    # Shared options available both globally and on every subcommand.
+    shared = argparse.ArgumentParser(add_help=False)
+    shared.add_argument("--format", choices=["table", "json"], default="json")
+    shared.add_argument("--path", default=_DEFAULT_PATH, help="path to the JSONL memory bank")
+
+    p = argparse.ArgumentParser(
+        prog=TOOL_NAME,
+        description="Portable agent memory store.",
+        parents=[shared],
+    )
     p.add_argument("--version", action="version", version=f"{TOOL_NAME} {TOOL_VERSION}")
-    p.add_argument("--format", choices=["table", "json"], default="json")
-    p.add_argument("--path", default=_DEFAULT_PATH, help="path to the JSONL memory bank")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    rem = sub.add_parser("remember", help="store a new memory")
+    rem = sub.add_parser("remember", help="store a new memory", parents=[shared])
     rem.add_argument("text")
     rem.add_argument("--tag", action="append", default=[], dest="tags")
     rem.add_argument("--importance", type=float, default=1.0)
 
-    rec = sub.add_parser("recall", help="retrieve memories ranked by a query")
+    rec = sub.add_parser("recall", help="retrieve memories ranked by a query", parents=[shared])
     rec.add_argument("query")
     rec.add_argument("--limit", type=int, default=5)
     rec.add_argument("--tag", default=None)
     rec.add_argument("--no-touch", action="store_true", help="do not update recency")
 
-    fgt = sub.add_parser("forget", help="delete a memory by id")
+    fgt = sub.add_parser("forget", help="delete a memory by id", parents=[shared])
     fgt.add_argument("id")
 
-    sub.add_parser("list", help="list every memory")
-    sub.add_parser("stats", help="show bank statistics")
+    sub.add_parser("list", help="list every memory", parents=[shared])
+    sub.add_parser("stats", help="show bank statistics", parents=[shared])
     return p
 
 

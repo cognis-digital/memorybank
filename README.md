@@ -20,6 +20,12 @@ pip install "git+https://github.com/cognis-digital/memorybank.git"
 memorybank scan .            # → prioritized findings in seconds
 ```
 
+<!-- cognis:layman:start -->
+## What is this?
+
+memorybank is a lightweight tool that gives AI agents a persistent memory — they can save notes or facts, then find them again later using plain-language searches. Everything is stored in a single portable file on your own computer, so no cloud account or database is needed. You tell it what to remember, ask it questions, and it returns the most relevant memories ranked by how closely they match, how recently they were used, and how important you marked them. It is aimed at developers building AI agents or automation pipelines who need a simple, self-hostable way to add long-term memory to their tools.
+<!-- cognis:layman:end -->
+
 ## Contents
 
 - [Why memorybank?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
@@ -46,6 +52,42 @@ agent-memory niche
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="quick-start"></a>
+<!-- cognis:install:start -->
+## Install
+
+`memorybank` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/memorybank/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/memorybank/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/memorybank.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/memorybank.git"  # uv
+pip install "git+https://github.com/cognis-digital/memorybank.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/memorybank.git
+cd memorybank && pip install .
+```
+
+Then run:
+```sh
+memorybank --help
+```
+<!-- cognis:install:end -->
+
 ## Quick start
 
 ```bash
