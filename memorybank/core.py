@@ -17,6 +17,9 @@ import uuid
 from dataclasses import dataclass, field, asdict
 from typing import Iterable
 
+TOOL_NAME = "memorybank"
+TOOL_VERSION = "0.1.0"
+
 _TOKEN_RE = re.compile(r"[a-z0-9]+")
 _DEFAULT_HALFLIFE_DAYS = 14.0
 
@@ -52,14 +55,34 @@ class Memory:
 
     @classmethod
     def from_dict(cls, d: dict) -> "Memory":
+        if "text" not in d:
+            raise KeyError("'text' field is required")
+        text = str(d["text"]).strip()
+        if not text:
+            raise ValueError("'text' field must not be empty")
+        try:
+            importance = float(d.get("importance", 1.0))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"'importance' must be a number: {exc}") from exc
+        if importance <= 0:
+            raise ValueError(f"'importance' must be positive, got {importance!r}")
+        try:
+            created_at = float(d.get("created_at", time.time()))
+            accessed_at = float(d.get("accessed_at", time.time()))
+            access_count = int(d.get("access_count", 0))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"invalid numeric field: {exc}") from exc
+        tags = d.get("tags", [])
+        if not isinstance(tags, list):
+            raise ValueError(f"'tags' must be a list, got {type(tags).__name__!r}")
         return cls(
-            text=d["text"],
+            text=text,
             id=d.get("id", uuid.uuid4().hex[:12]),
-            tags=list(d.get("tags", [])),
-            importance=float(d.get("importance", 1.0)),
-            created_at=float(d.get("created_at", time.time())),
-            accessed_at=float(d.get("accessed_at", time.time())),
-            access_count=int(d.get("access_count", 0)),
+            tags=[str(t) for t in tags],
+            importance=importance,
+            created_at=created_at,
+            accessed_at=accessed_at,
+            access_count=access_count,
         )
 
 
@@ -86,7 +109,7 @@ class MemoryBank:
                     continue
                 try:
                     m = Memory.from_dict(json.loads(line))
-                except (json.JSONDecodeError, KeyError) as exc:
+                except (json.JSONDecodeError, KeyError, ValueError, TypeError) as exc:
                     raise MemoryBankError(
                         f"corrupt memory at {self.path}:{lineno}: {exc}"
                     ) from exc
@@ -96,10 +119,18 @@ class MemoryBank:
         directory = os.path.dirname(os.path.abspath(self.path))
         os.makedirs(directory, exist_ok=True)
         tmp = self.path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as fh:
-            for m in self._memories.values():
-                fh.write(json.dumps(m.to_dict(), sort_keys=True) + "\n")
-        os.replace(tmp, self.path)
+        try:
+            with open(tmp, "w", encoding="utf-8") as fh:
+                for m in self._memories.values():
+                    fh.write(json.dumps(m.to_dict(), sort_keys=True) + "\n")
+            os.replace(tmp, self.path)
+        except OSError:
+            # Clean up the temp file if the write or replace failed.
+            try:
+                os.remove(tmp)
+            except OSError:
+                pass
+            raise
 
     # ---- mutations -----------------------------------------------------
     def add(
@@ -111,9 +142,23 @@ class MemoryBank:
         text = (text or "").strip()
         if not text:
             raise MemoryBankError("memory text must not be empty")
+        try:
+            importance = float(importance)
+        except (TypeError, ValueError):
+            raise MemoryBankError("importance must be a number")
         if importance <= 0:
             raise MemoryBankError("importance must be positive")
-        m = Memory(text=text, tags=sorted(set(tags or [])), importance=float(importance))
+        if not math.isfinite(importance):
+            raise MemoryBankError("importance must be a finite number")
+        tags_list: list[str] = []
+        if tags is not None:
+            for t in tags:
+                if not isinstance(t, str):
+                    raise MemoryBankError(f"tag must be a string, got {type(t).__name__!r}")
+                t = t.strip()
+                if t:
+                    tags_list.append(t)
+        m = Memory(text=text, tags=sorted(set(tags_list)), importance=importance)
         self._memories[m.id] = m
         self._save()
         return m
@@ -159,6 +204,8 @@ class MemoryBank:
         touch: bool = True,
     ) -> list[dict]:
         """Return the top memories for a query with score breakdowns."""
+        if not isinstance(limit, int):
+            raise MemoryBankError(f"limit must be an integer, got {type(limit).__name__!r}")
         if limit <= 0:
             raise MemoryBankError("limit must be positive")
         now = time.time() if now is None else now

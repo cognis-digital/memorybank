@@ -2,6 +2,8 @@
 
 Subcommands: remember, recall, forget, list, stats. Every command emits JSON
 (or a human table with --format table) and exits non-zero on failure.
+
+Global flags (--path, --format) must appear before the subcommand name.
 """
 from __future__ import annotations
 
@@ -49,41 +51,61 @@ def _emit(obj, fmt: str) -> None:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    # Shared options available both globally and on every subcommand.
-    shared = argparse.ArgumentParser(add_help=False)
-    shared.add_argument("--format", choices=["table", "json"], default="json")
-    shared.add_argument("--path", default=_DEFAULT_PATH, help="path to the JSONL memory bank")
+    # format_parent: shared --format flag that subcommands accept after their name.
+    format_parent = argparse.ArgumentParser(add_help=False)
+    format_parent.add_argument("--format", choices=["table", "json"], default="json")
 
     p = argparse.ArgumentParser(
         prog=TOOL_NAME,
         description="Portable agent memory store.",
-        parents=[shared],
+        parents=[format_parent],
     )
     p.add_argument("--version", action="version", version=f"{TOOL_NAME} {TOOL_VERSION}")
+    # --path is a root-only flag; it must appear before the subcommand name.
+    p.add_argument("--path", default=_DEFAULT_PATH, help="path to the JSONL memory bank")
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    rem = sub.add_parser("remember", help="store a new memory", parents=[shared])
+    rem = sub.add_parser("remember", help="store a new memory", parents=[format_parent])
     rem.add_argument("text")
     rem.add_argument("--tag", action="append", default=[], dest="tags")
     rem.add_argument("--importance", type=float, default=1.0)
 
-    rec = sub.add_parser("recall", help="retrieve memories ranked by a query", parents=[shared])
+    rec = sub.add_parser("recall", help="retrieve memories ranked by a query", parents=[format_parent])
     rec.add_argument("query")
     rec.add_argument("--limit", type=int, default=5)
     rec.add_argument("--tag", default=None)
     rec.add_argument("--no-touch", action="store_true", help="do not update recency")
 
-    fgt = sub.add_parser("forget", help="delete a memory by id", parents=[shared])
+    fgt = sub.add_parser("forget", help="delete a memory by id", parents=[format_parent])
     fgt.add_argument("id")
 
-    sub.add_parser("list", help="list every memory", parents=[shared])
-    sub.add_parser("stats", help="show bank statistics", parents=[shared])
+    sub.add_parser("list", help="list every memory", parents=[format_parent])
+    sub.add_parser("stats", help="show bank statistics", parents=[format_parent])
     return p
 
 
 def main(argv=None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+
+    # Validate --importance before hitting the bank so the error is CLI-level clear.
+    if hasattr(args, "importance"):
+        if args.importance <= 0:
+            print(
+                json.dumps({"error": "importance must be positive"}),
+                file=sys.stderr,
+            )
+            return 2
+
+    # Validate --limit before hitting the bank.
+    if hasattr(args, "limit"):
+        if args.limit <= 0:
+            print(
+                json.dumps({"error": "limit must be positive"}),
+                file=sys.stderr,
+            )
+            return 2
+
     try:
         bank = MemoryBank(args.path)
         if args.cmd == "remember":
@@ -109,6 +131,9 @@ def main(argv=None) -> int:
     except (OSError, ValueError) as exc:
         print(json.dumps({"error": f"{type(exc).__name__}: {exc}"}), file=sys.stderr)
         return 2
+    except KeyboardInterrupt:  # pragma: no cover
+        print(json.dumps({"error": "interrupted"}), file=sys.stderr)
+        return 130
     return 0
 
 
