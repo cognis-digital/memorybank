@@ -69,8 +69,12 @@ def _build_parser() -> argparse.ArgumentParser:
     fgt = sub.add_parser("forget", help="delete a memory by id")
     fgt.add_argument("id")
 
-    sub.add_parser("list", help="list every memory")
-    sub.add_parser("stats", help="show bank statistics")
+    lst = sub.add_parser("list", help="list every memory")
+    sts = sub.add_parser("stats", help="show bank statistics")
+    # also accept --format after the subcommand (SUPPRESS keeps the global default)
+    for _sp in (rem, rec, fgt, lst, sts):
+        _sp.add_argument("--format", choices=["table", "json"], default=argparse.SUPPRESS,
+                         help="output format")
     return p
 
 
