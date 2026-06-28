@@ -1,0 +1,20 @@
+$ memorybank-emit --help
+
+usage: memorybank [-h] [--version] [--format {table,json}] [--path PATH]
+                  {remember,recall,forget,list,stats} ...
+
+Portable agent memory store.
+
+positional arguments:
+  {remember,recall,forget,list,stats}
+    remember            store a new memory
+    recall              retrieve memories ranked by a query
+    forget              delete a memory by id
+    list                list every memory
+    stats               show bank statistics
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+  --path PATH           path to the JSONL memory bank

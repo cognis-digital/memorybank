@@ -1,0 +1,3 @@
+$ memorybank-emit --version
+
+memorybank 0.1.0

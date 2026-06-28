@@ -1,0 +1,9 @@
+$ memorybank-emit stats
+
+{
+  "count": 0,
+  "halflife_days": 14.0,
+  "path": "C:\\Users\\user\\cognis-demo\\memorybank\\memorybank.jsonl",
+  "tags": {},
+  "total_accesses": 0
+}

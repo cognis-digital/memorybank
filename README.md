@@ -20,6 +20,54 @@ pip install cognis-memorybank
 memorybank scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ memorybank-emit --version
+memorybank 0.1.0
+```
+
+```console
+$ memorybank-emit --help
+usage: memorybank [-h] [--version] [--format {table,json}] [--path PATH]
+                  {remember,recall,forget,list,stats} ...
+
+Portable agent memory store.
+
+positional arguments:
+  {remember,recall,forget,list,stats}
+    remember            store a new memory
+    recall              retrieve memories ranked by a query
+    forget              delete a memory by id
+    list                list every memory
+    stats               show bank statistics
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+  --path PATH           path to the JSONL memory bank
+```
+
+```console
+$ memorybank-emit stats
+{
+  "count": 0,
+  "halflife_days": 14.0,
+  "path": "C:\\Users\\user\\cognis-demo\\memorybank\\memorybank.jsonl",
+  "tags": {},
+  "total_accesses": 0
+}
+```
+
+> Blocks above are real `memorybank` output — reproduce them from a clone.
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 1. **Install** (Python 3.8+, stdlib only):
